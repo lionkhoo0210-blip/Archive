@@ -1,0 +1,3739 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LiEn — The Archive</title>
+
+<style>
+
+/* ========================================
+   THE ARCHIVE — CINEMATIC EDITION
+======================================== */
+
+:root {
+    color-scheme: dark;
+    --white: #eeeeee;
+    --muted: #888888;
+    --green: #00ff88;
+    --red: #ff4040;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    min-height: 100%;
+    background: #050505;
+    color: var(--white);
+}
+
+body {
+    font-family: Georgia, "Times New Roman", serif;
+    overflow-x: hidden;
+}
+
+.hidden {
+    display: none !important;
+}
+
+button, input {
+    font: inherit;
+}
+
+button, a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+button {
+    cursor: pointer;
+}
+
+button:disabled {
+    cursor: default;
+    opacity: 0.6;
+}
+
+/* ========================================
+   GLOBAL ATMOSPHERE
+======================================== */
+
+.scene {
+    position: relative;
+    min-height: calc(100svh - 48px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    isolation: isolate;
+    padding: 80px 20px 50px;
+}
+
+.scene::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -3;
+    background:
+        radial-gradient(
+            ellipse at center,
+            #24282c55,
+            transparent 70%
+        ),
+        #050505;
+    animation: atmosphere 12s ease-in-out infinite;
+}
+
+.structure {
+    position: fixed;
+    z-index: -2;
+    top: 19%;
+    bottom: 0;
+    width: min(520px, 75vw);
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0.23;
+    filter: blur(3px);
+    pointer-events: none;
+}
+
+.structure::before {
+    content: "";
+    position: absolute;
+    inset: 25% 4% 0;
+    background: repeating-linear-gradient(
+        90deg,
+        #151719 0 13px,
+        #080909 13px 23px
+    );
+    clip-path: polygon(
+        0 12%, 50% 0, 100% 12%,
+        88% 100%, 12% 100%
+    );
+}
+
+.spire {
+    position: absolute;
+    left: 32%;
+    top: 0;
+    width: 36%;
+    height: 34%;
+    background: linear-gradient(
+        90deg, #101112, #242527, #0d0d0e
+    );
+    clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+.lintel {
+    position: absolute;
+    top: 35%;
+    left: 3%;
+    width: 94%;
+    height: 13%;
+    border-top: 16px solid #252628;
+    border-bottom: 12px solid #252628;
+}
+
+.door {
+    position: absolute;
+    bottom: 0;
+    left: 39%;
+    width: 22%;
+    height: 49%;
+    background: linear-gradient(
+        90deg, #0b0b0c, #262729, #0b0b0c
+    );
+}
+
+.noise {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0.10;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+}
+
+/* Floating particles */
+
+#particles {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.particle {
+    position: absolute;
+    bottom: -20px;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: #b9c8c3;
+    box-shadow: 0 0 8px #b9c8c366;
+    opacity: 0;
+    animation: particleRise linear infinite;
+}
+
+@keyframes particleRise {
+    0% {
+        transform: translateY(0);
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 0.25;
+    }
+
+    80% {
+        opacity: 0.15;
+    }
+
+    100% {
+        transform: translateY(-110vh);
+        opacity: 0;
+    }
+}
+
+@keyframes atmosphere {
+    0%, 100% {
+        opacity: 0.55;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+/* ========================================
+   GLOBAL TEXT AND ANIMATIONS
+======================================== */
+
+.screen {
+    position: relative;
+    z-index: 1;
+    width: min(100%, 1000px);
+    margin: auto;
+    text-align: center;
+    animation: appear 1.2s ease both;
+}
+
+h1 {
+    font-size: clamp(27px, 4vw, 44px);
+    letter-spacing: 0.2em;
+    line-height: 1.4;
+    margin: 25px 0 35px;
+    text-shadow: 0 0 22px #ffffff22;
+}
+
+.screen h1 {
+    animation: floating 6s ease-in-out infinite;
+}
+
+.label {
+    color: #999;
+    font: 11px "Courier New", monospace;
+    letter-spacing: 4px;
+    line-height: 1.8;
+}
+
+.subtitle {
+    color: #999;
+    font: 12px/2 "Courier New", monospace;
+    letter-spacing: 2px;
+    margin: 25px auto 35px;
+}
+
+.floating {
+    animation: floating 6s ease-in-out infinite;
+}
+
+@keyframes floating {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-6px);
+    }
+
+    75% {
+        transform: translateX(6px);
+    }
+}
+
+/* ========================================
+   CINEMATIC TRANSITION OVERLAY
+======================================== */
+
+#transition-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    background: #000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s ease;
+}
+
+#transition-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* ========================================
+   BUTTONS AND ANSWER BOXES
+======================================== */
+
+.archive-button {
+    display: inline-block;
+    padding: 17px 30px;
+    border: 1px solid #555;
+    background: #0c0c0caa;
+    color: #ddd;
+    font: 12px "Courier New", monospace;
+    letter-spacing: 2px;
+    text-decoration: none;
+    transition: 0.35s;
+}
+
+.archive-button:hover {
+    background: #ddd;
+    color: #111;
+    border-color: #ddd;
+    box-shadow: 0 0 25px #ffffff20;
+    transform: translateY(-3px);
+}
+
+.archive-button:focus-visible,
+button:focus-visible,
+a:focus-visible {
+    outline: 2px solid #a5c5bd;
+    outline-offset: 4px;
+}
+
+.answer-form {
+    display: flex;
+    width: min(100%, 650px);
+    min-height: 65px;
+    margin: 35px auto 0;
+    border: 1px solid #555;
+    background: #0b0b0bc9;
+    transition: border-color 0.35s, box-shadow 0.35s;
+}
+
+.answer-form:focus-within {
+    border-color: #aaa;
+    box-shadow: 0 0 22px #ffffff12;
+}
+
+.answer-form input {
+    flex: 1;
+    min-width: 0;
+    padding: 15px 22px;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #eee;
+    font: 16px "Courier New", monospace;
+}
+
+.answer-form input::placeholder {
+    color: #777;
+}
+
+.answer-form button {
+    width: 145px;
+    flex-shrink: 0;
+    border: none;
+    border-left: 1px solid #555;
+    background: #171717;
+    color: #ddd;
+    font: 12px "Courier New", monospace;
+    letter-spacing: 2px;
+    transition: 0.3s;
+}
+
+.answer-form button:hover:not(:disabled) {
+    background: #ddd;
+    color: #111;
+}
+
+.answer-form.correct {
+    border-color: var(--green);
+    box-shadow: 0 0 24px #00ff8822;
+}
+
+.answer-form.incorrect {
+    border-color: var(--red);
+    animation: shake 0.3s ease;
+}
+
+.feedback {
+    min-height: 25px;
+    margin: 25px auto;
+    font: 13px "Courier New", monospace;
+    letter-spacing: 3px;
+}
+
+.feedback.success {
+    color: var(--green);
+    text-shadow: 0 0 12px #00ff8855;
+}
+
+.feedback.error {
+    color: var(--red);
+    text-shadow: 0 0 12px #ff404055;
+}
+
+/* ========================================
+   MUSIC CONTROL
+======================================== */
+
+#music-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 200;
+    padding: 12px 16px;
+    border: 1px solid #444;
+    background: #090909cc;
+    color: #aaa;
+    font: 10px "Courier New", monospace;
+    letter-spacing: 2px;
+    transition: 0.3s;
+}
+
+#music-toggle:hover {
+    border-color: #aaa;
+    color: #fff;
+}
+
+#music-toggle.muted {
+    color: #777;
+}
+
+/* ========================================
+   WELCOME PAGE
+======================================== */
+
+#welcome {
+    max-width: 650px;
+}
+
+.welcome-title {
+    font-size: clamp(42px, 7vw, 72px);
+    letter-spacing: 0.22em;
+    margin: 30px 0;
+}
+
+.welcome-line {
+    width: 80px;
+    height: 1px;
+    background: #aaa;
+    margin: 30px auto;
+    animation: linePulse 4s ease-in-out infinite;
+}
+
+@keyframes linePulse {
+    0%, 100% {
+        width: 65px;
+        opacity: 0.3;
+    }
+
+    50% {
+        width: 110px;
+        opacity: 1;
+    }
+}
+
+.welcome-intro {
+    font-size: 17px;
+    line-height: 1.8;
+}
+
+.welcome-rules {
+    max-width: 460px;
+    margin: 30px auto;
+    padding: 25px 30px;
+    border: 1px solid #333;
+    background: #0a0a0a66;
+    text-align: left;
+}
+
+.welcome-rules p {
+    color: #aaa;
+    font: 12px/1.8 "Courier New", monospace;
+    margin: 15px 0;
+}
+
+.welcome-rules .rules-heading {
+    text-align: center;
+    color: #eee;
+    letter-spacing: 3px;
+    margin-bottom: 25px;
+}
+
+.welcome-warning {
+    margin: 30px auto;
+    font: 12px "Courier New", monospace;
+    letter-spacing: 3px;
+    animation: warningPulse 4s ease-in-out infinite;
+}
+
+@keyframes warningPulse {
+    0%, 100% {
+        opacity: 0.55;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+/* ========================================
+   LEVELS 1–4
+======================================== */
+
+.cipher-wrap {
+    margin: 40px auto;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.glyphs {
+    color: #f2f2f2;
+    font-family: "DejaVu Sans",
+        "Noto Sans Symbols 2",
+        "Segoe UI Symbol", sans-serif;
+    font-size: clamp(17px, 2.5vw, 32px);
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+    text-shadow: 0 0 12px #ffffff55;
+    animation: floating 5s ease-in-out infinite;
+}
+
+.math-puzzle {
+    font: clamp(16px, 2.5vw, 28px)/1.9
+        "Courier New", monospace;
+    margin: 60px auto;
+    overflow-wrap: anywhere;
+    text-shadow: 0 0 15px #ffffff22;
+    animation: floating 6s ease-in-out infinite;
+}
+
+.previous-code {
+    width: min(100%, 550px);
+    margin: 35px auto;
+    padding: 25px 15px;
+    border: 1px solid #444;
+    background: #0f0f0f99;
+    animation: floating 7s ease-in-out infinite;
+}
+
+.previous-code div {
+    font: clamp(16px, 2.5vw, 24px)
+        "Courier New", monospace;
+    overflow-wrap: anywhere;
+    margin: 20px auto;
+}
+
+.spacing-code {
+    font: clamp(16px, 2.5vw, 24px)
+        "Courier New", monospace;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+    animation: floating 6s ease-in-out infinite;
+}
+
+/* ========================================
+   LEVEL 5 — PATH SELECTION
+======================================== */
+
+.path-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 25px;
+    margin: 40px auto;
+}
+
+.path-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+    min-height: 350px;
+    padding: 30px 25px;
+    border: 1px solid #444;
+    background: #0c0c0ce6;
+    color: #ddd;
+    font-family: "Courier New", monospace;
+    transition: 0.4s;
+}
+
+.path-card:hover {
+    transform: translateY(-8px);
+    background: #161616;
+    box-shadow: 0 0 40px #ffffff12;
+}
+
+.path-a:hover {
+    border-color: #9cae91;
+    box-shadow: 0 0 35px #9cae9122;
+}
+
+.path-b:hover {
+    border-color: #829ac4;
+    box-shadow: 0 0 35px #829ac422;
+}
+
+.path-number {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: #888;
+}
+
+.path-symbol {
+    font-size: 48px;
+    animation: floating 6s ease-in-out infinite;
+}
+
+.path-card strong {
+    font-size: 17px;
+    line-height: 1.6;
+    letter-spacing: 2px;
+}
+
+.path-description {
+    color: #aaa;
+    font-size: 12px;
+    line-height: 2;
+    max-width: 300px;
+}
+
+.path-tag {
+    margin-top: auto;
+    color: #999;
+    font-size: 10px;
+    letter-spacing: 2px;
+}
+
+.path-enter {
+    width: 100%;
+    padding-top: 18px;
+    border-top: 1px solid #444;
+    font-size: 12px;
+    letter-spacing: 2px;
+}
+
+.path-back {
+    margin: 25px auto;
+}
+
+.path-completed {
+    color: #83b9a3;
+    font-size: 11px;
+    letter-spacing: 2px;
+}
+
+/* ========================================
+   PATH A — FORGOTTEN LIBRARY
+======================================== */
+
+#level5a {
+    max-width: 780px;
+    font-family: "Courier New", monospace;
+}
+
+#level5a h1 {
+    font-family: Georgia, serif;
+}
+
+.library-panel {
+    margin-top: 35px;
+    padding: 30px;
+    border: 1px solid #383838;
+    background: #0a0a0ae0;
+    transition: border-color 0.4s;
+}
+
+.library-panel:hover {
+    border-color: #666;
+}
+
+.library-panel h2 {
+    font-size: 19px;
+    letter-spacing: 3px;
+    margin: 25px auto;
+    line-height: 1.5;
+}
+
+.library-panel p {
+    color: #aaa;
+    font-size: 13px;
+    line-height: 2;
+}
+
+.library-warning {
+    border-color: #665c43;
+}
+
+.library-warning strong {
+    display: block;
+    color: #e3c997;
+    letter-spacing: 2px;
+    margin: 20px auto;
+}
+
+.library-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    text-align: left;
+    padding: 17px 0;
+    border-bottom: 1px solid #292929;
+}
+
+.library-step span {
+    color: #888;
+    font-size: 13px;
+}
+
+.library-step p {
+    margin: 0;
+}
+
+.library-folder {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px;
+    margin: 15px auto;
+    background: #050505;
+    border: 1px solid #444;
+}
+
+.library-folder code {
+    font-size: 12px;
+    color: #c4d4c5;
+    overflow-wrap: anywhere;
+}
+
+.library-folder button {
+    padding: 10px;
+    background: #181818;
+    border: 1px solid #555;
+    color: #ddd;
+}
+
+.library-coordinates {
+    margin: 25px auto;
+    padding: 20px;
+    border: 1px solid #555;
+    font-size: clamp(16px, 3vw, 23px);
+    letter-spacing: 2px;
+}
+
+/* ========================================
+   PATH B — LAST TRANSMISSION
+======================================== */
+
+#level5b {
+    max-width: 750px;
+    font-family: "Courier New", monospace;
+}
+
+#level5b h1 {
+    font-family: Georgia, serif;
+    color: #e1e7f2;
+}
+
+.transmission-room {
+    position: relative;
+    height: 180px;
+    overflow: hidden;
+    margin: 15px auto;
+    background: transparent;
+}
+
+.signal-light {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 12px;
+    height: 12px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: #505763;
+    z-index: 2;
+    transition: background 0.08s, box-shadow 0.08s;
+}
+
+.signal-beam {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 280px;
+    height: 180px;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(
+        ellipse,
+        #91baff55,
+        #5578b51e 45%,
+        transparent 75%
+    );
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.08s;
+}
+
+.transmission-room.active .signal-light {
+    background: #a8b8cf;
+    box-shadow: 0 0 20px #8299ba66;
+}
+
+.transmission-room.active .signal-beam {
+    opacity: 0.35;
+}
+
+#morse-audio {
+    display: block;
+    width: 100%;
+    max-width: 550px;
+    height: 45px;
+    margin: auto;
+    color-scheme: dark;
+    border: 1px solid #303030;
+    border-radius: 5px;
+    background: #171717;
+}
+
+#morse-audio::-webkit-media-controls-panel {
+    background-color: #171717;
+}
+
+#signal-status {
+    color: #8292ae;
+    font-size: 11px;
+    letter-spacing: 2px;
+    margin: 25px auto;
+}
+
+#level5b-form {
+    width: 100%;
+    min-height: 70px;
+}
+
+/* ========================================
+   LEVEL 6 — FINAL KEY
+======================================== */
+
+#level6 {
+    max-width: 1100px;
+}
+
+.final-puzzle-image {
+    display: block;
+    width: 100%;
+    max-width: 1000px;
+    height: auto;
+    margin: 35px auto;
+    border: 1px solid #444;
+    box-shadow: 0 0 35px #ffffff10;
+    animation: imageGlow 7s ease-in-out infinite;
+}
+
+@keyframes imageGlow {
+    0%, 100% {
+        box-shadow: 0 0 15px #ffffff08;
+    }
+
+    50% {
+        box-shadow: 0 0 35px #ffffff20;
+    }
+}
+
+#level6-form {
+    max-width: 750px;
+}
+
+/* ========================================
+   ENDING — MOVING SCULK BACKGROUND
+======================================== */
+
+#ending {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    overflow: hidden;
+    background: #020606;
+    isolation: isolate;
+    animation: fadeIn 3s ease both;
+}
+
+.ending-background {
+    position: absolute;
+    inset: 0;
+    z-index: -3;
+
+    background-image: url("Background1.jpg");
+    background-size: 100% auto;
+    background-repeat: repeat;
+    background-position: center 0;
+
+    animation:
+        sculkMovement 65s linear infinite,
+        sculkGlow 9s ease-in-out infinite;
+}
+
+@keyframes sculkMovement {
+    from {
+        background-position: center 0;
+    }
+
+    to {
+        background-position: center 100vw;
+    }
+}
+
+@keyframes sculkGlow {
+    0%, 100% {
+        filter: brightness(0.65) saturate(0.9);
+    }
+
+    50% {
+        filter: brightness(1.25) saturate(1.3);
+    }
+}
+
+.ending-shimmer {
+    position: absolute;
+    inset: -30%;
+    z-index: -2;
+    pointer-events: none;
+    background: radial-gradient(
+        ellipse,
+        #3ba99818,
+        transparent 60%
+    );
+    animation: shimmer 15s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0%, 100% {
+        transform: translate(-15%, -10%);
+        opacity: 0.3;
+    }
+
+    50% {
+        transform: translate(15%, 10%);
+        opacity: 0.8;
+    }
+}
+
+.ending-vignette {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(
+        ellipse at center,
+        #00000022,
+        #000000aa
+    );
+    pointer-events: none;
+}
+
+/* Original ending sentences */
+
+.ending-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 30px;
+    transition: opacity 2s;
+}
+
+.ending-content.fade-out {
+    opacity: 0;
+}
+
+.ending-label {
+    color: #a2b8b2;
+    font: 11px "Courier New", monospace;
+    letter-spacing: 5px;
+    margin-bottom: 40px;
+}
+
+.ending-line {
+    font-size: clamp(17px, 2.3vw, 25px);
+    line-height: 1.8;
+    margin: 20px auto;
+    text-shadow: 0 0 15px #ffffff33;
+    opacity: 0;
+}
+
+.ending-line-1 {
+    animation: fadeIn 2s ease 2s forwards;
+}
+
+.ending-line-2 {
+    animation: fadeIn 2s ease 5s forwards;
+}
+
+.ending-line-3 {
+    animation: fadeIn 2s ease 8s forwards;
+}
+
+.ending-title {
+    font-size: clamp(35px, 7vw, 80px);
+    letter-spacing: 0.2em;
+    margin: 45px auto 0;
+    text-shadow: 0 0 30px #ffffff44;
+    opacity: 0;
+    animation: fadeIn 3s ease 12s forwards;
+}
+
+/* ========================================
+   MINECRAFT-INSPIRED SCROLLING CREDITS
+======================================== */
+
+#credits {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    mask-image: linear-gradient(
+        transparent,
+        black 12%,
+        black 88%,
+        transparent
+    );
+}
+
+.credits-track {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: min(90%, 760px);
+    text-align: center;
+    transform: translateX(-50%);
+    will-change: transform;
+}
+
+.credit-block {
+    padding: 30px 15px 90px;
+}
+
+.credit-heading {
+    color: #83c6b6;
+    font: 12px/1.8 "Courier New", monospace;
+    letter-spacing: 4px;
+    margin-bottom: 35px;
+}
+
+.credit-title {
+    font-size: clamp(30px, 5vw, 55px);
+    letter-spacing: 7px;
+    line-height: 1.5;
+    margin: 20px auto;
+}
+
+.credit-block p {
+    color: #e3e9e6;
+    font-size: clamp(16px, 2vw, 21px);
+    line-height: 1.9;
+    margin: 25px auto;
+    text-shadow: 0 2px 8px #000;
+}
+
+.credit-role {
+    color: #a1b6af !important;
+    font: 12px/1.8 "Courier New", monospace !important;
+    letter-spacing: 2px;
+}
+
+.credit-name {
+    font-size: 24px !important;
+    color: #fff !important;
+}
+
+.credit-image {
+    display: block;
+    width: 100%;
+    max-width: 650px;
+    height: auto;
+    margin: 30px auto;
+    border: 1px solid #65776d;
+    box-shadow: 0 0 30px #000;
+}
+
+.credit-caption {
+    font-size: 12px !important;
+    color: #b3c4be !important;
+}
+
+/* Credit controls */
+
+#credits-controls {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+    z-index: 5;
+}
+
+#credits-controls button {
+    padding: 10px 15px;
+    border: 1px solid #50615a;
+    background: #050909cc;
+    color: #b7c7c0;
+    font: 10px "Courier New", monospace;
+    letter-spacing: 1px;
+}
+
+/* ========================================
+   FINAL COMPLETION SCREEN
+======================================== */
+
+#completion {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    text-align: center;
+    animation: fadeIn 3s ease both;
+}
+
+#completion h1 {
+    font-size: clamp(26px, 5vw, 50px);
+    letter-spacing: 5px;
+    animation: floating 6s ease-in-out infinite;
+}
+
+#completion p {
+    max-width: 650px;
+    line-height: 1.9;
+    color: #b8c9c2;
+}
+
+#other-path {
+    margin: 30px auto 15px;
+}
+
+.completion-small {
+    font: 11px/1.8 "Courier New", monospace;
+    letter-spacing: 2px;
+    color: #81968e !important;
+}
+
+footer {
+    height: 48px;
+    border-top: 1px solid #242424;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font: 10px "Courier New", monospace;
+    letter-spacing: 2px;
+    color: #666;
+    text-align: center;
+}
+
+/* ========================================
+   MOBILE RESPONSIVENESS
+======================================== */
+
+@media (max-width: 650px) {
+
+    .scene {
+        padding: 75px 16px 40px;
+    }
+
+    h1 {
+        letter-spacing: 0.12em;
+    }
+
+    .path-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .path-card {
+        min-height: 300px;
+    }
+
+    .answer-form {
+        min-height: 58px;
+    }
+
+    .answer-form input {
+        font-size: 13px;
+        padding: 12px;
+    }
+
+    .answer-form button {
+        width: 100px;
+        font-size: 10px;
+    }
+
+    .library-panel {
+        padding: 22px 15px;
+    }
+
+    .ending-content {
+        padding: 25px 18px;
+    }
+
+    .ending-label {
+        margin-bottom: 20px;
+        letter-spacing: 3px;
+    }
+
+    .ending-line {
+        margin: 15px auto;
+    }
+
+    .ending-title {
+        margin-top: 25px;
+    }
+
+    #music-toggle {
+        top: 12px;
+        right: 12px;
+    }
+
+    .ending-background {
+        background-size: auto 100%;
+    }
+}
+
+/* Accessibility */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-delay: 0ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .particle,
+    .signal-light,
+    .signal-beam {
+        visibility: hidden;
+    }
+
+    .ending-line,
+    .ending-title {
+        opacity: 1;
+    }
+
+    #credits {
+        overflow-y: auto;
+        mask-image: none;
+    }
+
+    .credits-track {
+        position: relative;
+        top: 0;
+        transform: translateX(-50%) !important;
+        padding-bottom: 100px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- GLOBAL VISUAL EFFECTS -->
+
+<div class="noise" aria-hidden="true"></div>
+<div id="particles" aria-hidden="true"></div>
+<div id="transition-overlay" aria-hidden="true"></div>
+
+<!-- BACKGROUND MUSIC -->
+
+<audio id="mystery-music" src="Mystery.mp3" loop preload="none"></audio>
+
+<audio id="library-music" src="Library.mp3" loop preload="none"></audio>
+
+<audio id="ending-music" src="Ending.mp3" preload="none"></audio>
+
+<button id="music-toggle" type="button" aria-pressed="false">
+    MUSIC: ON
+</button>
+
+<main class="scene">
+
+<div class="structure" aria-hidden="true">
+    <div class="spire"></div>
+    <div class="lintel"></div>
+    <div class="door"></div>
+</div>
+
+<!-- =====================================
+     WELCOME
+===================================== -->
+
+<section id="welcome" class="screen">
+
+    <p class="label">
+        — A MESSAGE FROM THE CREATOR —
+    </p>
+
+    <h1 class="welcome-title">HELLO.</h1>
+
+    <div class="welcome-line"></div>
+
+    <p class="welcome-intro">
+        Welcome to a decoding experience
+        created by <strong>LiEn.</strong>
+    </p>
+
+    <p class="subtitle">
+        Every message has a meaning.<br>
+        Every answer opens another door.
+    </p>
+
+    <div class="welcome-rules">
+
+        <p class="rules-heading">
+            BEFORE YOU BEGIN
+        </p>
+
+        <p>01 / Prepare a pen and paper.</p>
+
+        <p>
+            02 / Follow the clues and
+            do your own research.
+        </p>
+
+        <p>
+            03 / Challenge yourself without AI.
+        </p>
+
+        <p>
+            04 / Minecraft knowledge
+            may be required.
+        </p>
+
+        <p>
+            05 / Headphones are recommended.
+        </p>
+
+    </div>
+
+    <p class="welcome-warning">
+        GOOD LUCK. YOU'LL NEED IT.
+    </p>
+
+    <button id="begin" class="archive-button" type="button">
+        BEGIN DECODING →
+    </button>
+
+</section>
+
+<!-- =====================================
+     LEVEL 1
+===================================== -->
+
+<section id="level-one" class="screen hidden">
+
+    <h1>GOOD LUCK.</h1>
+
+    <form id="key-form" class="answer-form" autocomplete="off">
+
+        <input
+            id="key"
+            type="text"
+            placeholder="enter key"
+            aria-label="Enter secret key"
+            spellcheck="false"
+            required
+        >
+
+        <button type="submit">SUBMIT</button>
+
+    </form>
+
+    <p class="label">LEVEL 1</p>
+
+    <div class="cipher-wrap">
+
+        <div class="glyphs">
+            ╎ ꖎ╎ꖌᒷ ⚍リᓭℸ ̣ᔑʖꖎᒷ ᓭᒲ!¡
+        </div>
+
+    </div>
+
+    <p id="feedback" class="feedback" role="status"></p>
+
+</section>
+
+<!-- =====================================
+     LEVEL 2
+===================================== -->
+
+<section id="level2" class="screen hidden">
+
+    <h1>LEVEL 2</h1>
+
+    <div class="math-puzzle">
+        591841 × 3607 × 2591 × 59 × 13 × 5
+    </div>
+
+    <form id="level2-form" class="answer-form" autocomplete="off">
+
+        <input
+            id="level2-key"
+            type="text"
+            placeholder="enter key"
+            aria-label="Level 2 key"
+            required
+        >
+
+        <button type="submit">SUBMIT</button>
+
+    </form>
+
+    <p id="level2-feedback" class="feedback" role="status"></p>
+
+</section>
+
+<!-- =====================================
+     LEVEL 3
+===================================== -->
+
+<section id="level3" class="screen hidden">
+
+    <h1>THE SEQUENCE.</h1>
+
+    <p class="subtitle">
+        THE ANSWER WAS ALWAYS THERE.
+    </p>
+
+    <div class="previous-code">
+
+        <p class="label">PREVIOUSLY DECODED</p>
+
+        <div>21212114922518195</div>
+
+    </div>
+
+    <p class="label">SPACING CODE</p>
+
+    <div class="spacing-code">
+        2,2,2,2,1,2,1,2,2,1
+    </div>
+
+    <p class="subtitle">
+        EVERY NUMBER HAS ITS PLACE.
+    </p>
+
+    <form id="level3-form" class="answer-form" autocomplete="off">
+
+        <input
+            id="level3-key"
+            type="text"
+            placeholder="enter key"
+            aria-label="Level 3 key"
+            required
+        >
+
+        <button type="submit">SUBMIT</button>
+
+    </form>
+
+    <p id="level3-feedback" class="feedback" role="status"></p>
+
+</section>
+
+<!-- =====================================
+     LEVEL 4
+===================================== -->
+
+<section id="level4" class="screen hidden">
+
+    <p class="label">LEVEL 4</p>
+
+    <h1>THE LANGUAGE OF MACHINES.</h1>
+
+    <p class="subtitle">
+        WORDS ARE NOT ALWAYS WRITTEN IN LETTERS.
+    </p>
+
+    <div class="previous-code">
+
+        <p class="label">PREVIOUSLY DECODED</p>
+
+        <div>UU UNIVERSE</div>
+
+    </div>
+
+    <p class="subtitle">
+        THE ALPHABET HAS ANOTHER FORM.
+    </p>
+
+    <form id="level4-form" class="answer-form" autocomplete="off">
+
+        <input
+            id="level4-key"
+            type="text"
+            placeholder="enter binary sequence"
+            aria-label="Binary sequence"
+            spellcheck="false"
+            required
+        >
+
+        <button type="submit">SUBMIT</button>
+
+    </form>
+
+    <p id="level4-feedback" class="feedback" role="status"></p>
+
+</section>
+
+<!-- =====================================
+     LEVEL 5 — CHOOSE YOUR PATH
+===================================== -->
+
+<section id="level5-choice" class="screen hidden">
+
+    <p class="label">LEVEL 05 / THE CROSSROADS</p>
+
+    <h1>CHOOSE YOUR PATH.</h1>
+
+    <p class="subtitle">
+        TWO PATHS. ONE DESTINATION.
+    </p>
+
+    <div class="path-grid">
+
+        <button id="choose-path-a" class="path-card path-a" type="button">
+
+            <span class="path-number">
+                PATH A / 05-A
+            </span>
+
+            <span class="path-symbol">⌖</span>
+
+            <strong>THE FORGOTTEN LIBRARY</strong>
+
+            <span class="path-description">
+                A forgotten world awaits.
+                Follow the coordinates.
+                Search the library.
+                Find what was left behind.
+            </span>
+
+            <span id="path-a-completed" class="path-completed hidden">
+                PATH COMPLETED
+            </span>
+
+            <span class="path-tag">
+                MINECRAFT REQUIRED
+            </span>
+
+            <span class="path-enter">
+                ENTER PATH →
+            </span>
+
+        </button>
+
+        <button id="choose-path-b" class="path-card path-b" type="button">
+
+            <span class="path-number">
+                PATH B / 05-B
+            </span>
+
+            <span class="path-symbol">◉</span>
+
+            <strong>THE LAST TRANSMISSION</strong>
+
+            <span class="path-description">
+                A signal echoes through the darkness.
+                Watch the light. Listen carefully.
+                Decode what remains.
+            </span>
+
+            <span id="path-b-completed" class="path-completed hidden">
+                PATH COMPLETED
+            </span>
+
+            <span class="path-tag">
+                NO DOWNLOAD REQUIRED
+            </span>
+
+            <span class="path-enter">
+                ENTER PATH →
+            </span>
+
+        </button>
+
+    </div>
+
+    <p class="label">
+        DIFFERENT JOURNEYS. THE SAME SECRET.
+    </p>
+
+</section>
+
+<!-- =====================================
+     PATH A — THE FORGOTTEN LIBRARY
+===================================== -->
+
+<section id="level5a" class="screen hidden">
+
+    <p class="label">PATH A / LEVEL 05-A</p>
+
+    <h1>THE FORGOTTEN LIBRARY.</h1>
+
+    <p class="subtitle">
+        A WORLD FORGOTTEN. A SECRET LEFT BEHIND.
+    </p>
+
+    <div class="library-panel library-warning">
+
+        <p class="label">BEFORE YOU CONTINUE</p>
+
+        <p>
+            This path requires Minecraft Java Edition
+            and a downloadable Minecraft world.
+        </p>
+
+        <strong>REQUIRED VERSION: 26.3</strong>
+
+    </div>
+
+    <div class="library-panel">
+
+        <p class="label">01 / DOWNLOAD</p>
+
+        <h2>OBTAIN THE WORLD.</h2>
+
+        <p>
+            The next clue is hidden somewhere
+            inside a forgotten Minecraft library.
+        </p>
+
+        <a
+            class="archive-button"
+            href="https://drive.google.com/drive/folders/1cHyqhCyLA1DEpGlBpuqJxfY5eOpJwBax?usp=sharing"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            DOWNLOAD WORLD ↗
+        </a>
+
+        <p>
+            Download the ZIP file from Google Drive.
+        </p>
+
+    </div>
+
+    <div class="library-panel">
+
+        <p class="label">02 / INSTALLATION</p>
+
+        <h2>ENTER THE WORLD.</h2>
+
+        <div class="library-step">
+            <span>01</span>
+            <p>Download the Minecraft world ZIP file.</p>
+        </div>
+
+        <div class="library-step">
+            <span>02</span>
+            <p>
+                Right-click the ZIP file and
+                select "Extract All".
+            </p>
+        </div>
+
+        <div class="library-step">
+            <span>03</span>
+            <p>Press Windows + R and enter:</p>
+        </div>
+
+        <div class="library-folder">
+
+            <code>%appdata%\.minecraft\saves</code>
+
+            <button id="copy-saves-path" type="button">
+                COPY
+            </button>
+
+        </div>
+
+        <div class="library-step">
+            <span>04</span>
+            <p>
+                Move the extracted world folder
+                into the saves folder.
+            </p>
+        </div>
+
+        <div class="library-step">
+            <span>05</span>
+            <p>
+                Launch Minecraft Java Edition
+                using version 26.3.
+            </p>
+        </div>
+
+        <div class="library-step">
+            <span>06</span>
+            <p>
+                Select Singleplayer and open
+                The Forgotten Library.
+            </p>
+        </div>
+
+    </div>
+
+    <div class="library-panel">
+
+        <p class="label">03 / YOUR MISSION</p>
+
+        <h2>FIND WHAT WAS FORGOTTEN.</h2>
+
+        <p>
+            Travel to the following coordinates
+            if you do not spawn at the library.
+        </p>
+
+        <div class="library-coordinates floating">
+            X: 20000 / Z: 20000
+        </div>
+
+        <p>
+            Search the library carefully.<br>
+            Not every book tells the truth.<br>
+            Not every shelf is what it seems.
+        </p>
+
+        <p class="label">
+            WHEN YOU FIND THE ANSWER,
+            RETURN TO THIS WEBSITE.
+        </p>
+
+    </div>
+
+    <div class="library-panel">
+
+        <p class="label">04 / FINAL VERIFICATION</p>
+
+        <h2>THE MISSING LINK.</h2>
+
+        <p>
+            FOUND THE SECRET?<br>
+            SUBMIT THE LINK THAT LEADS TO THE ANSWER.
+        </p>
+
+        <form id="level5a-form" class="answer-form" autocomplete="off">
+
+            <input
+                id="level5a-key"
+                type="text"
+                placeholder="enter the video URL"
+                aria-label="Video URL"
+                spellcheck="false"
+                required
+            >
+
+            <button type="submit">SUBMIT</button>
+
+        </form>
+
+        <p id="level5a-feedback" class="feedback" role="status"></p>
+
+    </div>
+
+    <button class="archive-button path-back" type="button">
+        ← CHANGE PATH
+    </button>
+
+</section>
+
+<!-- =====================================
+     PATH B — THE LAST TRANSMISSION
+===================================== -->
+
+<section id="level5b" class="screen hidden">
+
+    <p class="label">PATH B / LEVEL 05-B</p>
+
+    <h1>THE LAST TRANSMISSION.</h1>
+
+    <p class="subtitle">
+        An unidentified signal has been intercepted.
+    </p>
+
+    <div class="transmission-room">
+
+        <div id="signal-light" class="signal-light"></div>
+
+        <div class="signal-beam"></div>
+
+    </div>
+
+    <audio
+        id="morse-audio"
+        controls
+        preload="metadata"
+        controlslist="nodownload noplaybackrate"
+    >
+        <source src="MorseCode.wav" type="audio/wav">
+    </audio>
+
+    <p id="signal-status" role="status">
+        TRANSMISSION STANDBY
+    </p>
+
+    <form id="level5b-form" class="answer-form" autocomplete="off">
+
+        <input
+            id="level5b-key"
+            type="text"
+            placeholder="Enter decoded message"
+            aria-label="Decoded Morse message"
+            spellcheck="false"
+            required
+        >
+
+        <button type="submit">SUBMIT</button>
+
+    </form>
+
+    <p id="level5b-feedback" class="feedback" role="status"></p>
+
+    <button class="archive-button path-back" type="button">
+        ← CHANGE PATH
+    </button>
+
+</section>
+
+<!-- =====================================
+     LEVEL 6 — THE FINAL KEY
+===================================== -->
+
+<section id="level6" class="screen hidden">
+
+    <p class="label">
+        LEVEL 06 / THE FINAL RECORD
+    </p>
+
+    <h1>THE FINAL KEY.</h1>
+
+    <p class="subtitle">
+        ONE LAST SECRET REMAINS.
+    </p>
+
+    <img
+        src="FinalKey.png"
+        class="final-puzzle-image"
+        alt="Minecraft final puzzle showing signs and a hotbar"
+    >
+
+    <form id="level6-form" class="answer-form" autocomplete="off">
+
+        <input
+            id="level6-key"
+            type="text"
+            placeholder="Enter the final key"
+            aria-label="Final key"
+            spellcheck="false"
+            required
+        >
+
+        <button type="submit">SUBMIT</button>
+
+    </form>
+
+    <p id="level6-feedback" class="feedback" role="status"></p>
+
+</section>
+
+</main>
+
+<!-- =====================================
+     THE CINEMATIC ENDING
+===================================== -->
+
+<section id="ending" class="hidden">
+
+    <div class="ending-background"></div>
+
+    <div class="ending-shimmer"></div>
+
+    <div class="ending-vignette"></div>
+
+    <div id="ending-intro" class="ending-content">
+
+        <p class="ending-label">
+            ARCHIVE / FINAL RECORD
+        </p>
+
+        <p class="ending-line ending-line-1">
+            You've reached the end of the Archive.
+        </p>
+
+        <p class="ending-line ending-line-2">
+            But not every ending is an ending.
+        </p>
+
+        <p class="ending-line ending-line-3">
+            Perhaps the next chapter begins with a message.
+        </p>
+
+        <h1 class="ending-title">
+            YOUR TURN.
+        </h1>
+
+    </div>
+
+    <!-- SCROLLING CREDITS -->
+
+    <div id="credits" class="hidden">
+
+        
+<div id="credits-track" class="credits-track">
+
+    <div class="credit-block">
+
+        <p class="credit-heading">
+            AN EXPERIENCE CREATED BY
+        </p>
+
+        <h1 class="credit-title">LiEn</h1>
+
+        <p class="credit-heading">
+            THE ARCHIVE
+        </p>
+
+        <p>Well... you actually made it.</p>
+
+        <p>
+            I was starting to wonder
+            if anyone would.
+        </p>
+
+        <p>
+            Hopefully you didn't use ChatGPT
+            to solve everything.
+        </p>
+
+        <p class="credit-caption">
+            That would be slightly ironic.
+        </p>
+
+    </div>
+
+    <div class="credit-block">
+
+        <p class="credit-heading">
+            SO... HOW DID THIS EVEN START?
+        </p>
+
+        <p>
+            At first, I just wanted to make
+            a simple decoding website.
+        </p>
+
+        <p>Nothing too complicated.</p>
+
+        <p>Just a few puzzles.</p>
+
+        <p>And then I had another idea.</p>
+
+        <p>And another.</p>
+
+        <p>And another...</p>
+
+        <p>
+            Somehow, a simple website turned into
+            an entire Minecraft mystery.
+        </p>
+
+        <p>
+            I may have gotten a little
+            carried away.
+        </p>
+
+        <h1 class="credit-title">JUST A LITTLE.</h1>
+
+    </div>
+
+    <div class="credit-block">
+
+        <p class="credit-heading">
+            THE INSPIRATION
+        </p>
+
+        <p>
+            If you're wondering why there are
+            so many Minecraft references...
+        </p>
+
+        <p>Well, here's your answer.</p>
+
+        <p class="credit-name">Unstable SMP</p>
+
+        <p class="credit-name">Wifies</p>
+
+        <p>The Search for Leviathan</p>
+
+<p>Minecraft Live Decoding Website</p>
+
+<p>
+    <a
+        href="https://wifies.net/mclive/"
+        target="_blank"
+        rel="noopener noreferrer"
+        style="color: #83c6b6;"
+    >
+        wifies.net/mclive
+    </a>
+</p>
+
+<p>
+    His decoding website for Minecraft Live
+    was also one of the main inspirations
+    behind the Archive.
+</p>
+
+<p>
+    I really liked the idea of turning
+    a website into an actual mystery
+    instead of just a normal webpage.
+</p>
+
+<p>
+    So I thought,
+    why not make my own version,
+    with my own puzzles and ideas?
+</p>
+
+<p>
+    And somehow...
+    it turned into all of this.
+</p>
+
+        <p>
+            I've always found Minecraft mysteries
+            really interesting.
+        </p>
+
+        <p>
+            The hidden details, the storytelling,
+            and the feeling of discovering
+            something that was never meant
+            to be found.
+        </p>
+
+        <p>
+            So I thought...
+        </p>
+
+        <p>
+            Why not create something like that myself?
+        </p>
+
+    </div>
+
+    <div class="credit-block">
+
+        <p class="credit-heading">
+            THE FORGOTTEN LIBRARY
+        </p>
+
+        <p>
+            This entire library started
+            with one picture.
+        </p>
+
+        <img
+            src="LibraryReference.jpg"
+            class="credit-image"
+            alt="Original library reference"
+        >
+
+        <p class="credit-caption">
+            Original reference found online.
+            Watermark: Rana Rosso.
+        </p>
+
+        <p>
+            I saw this picture and thought,
+            "Yeah, I could probably build that."
+        </p>
+
+        <p>
+            Turns out, building it was
+            not quite that simple.
+        </p>
+
+        <p>
+            Bookshelves.
+        </p>
+
+        <p>
+            Pillars.
+        </p>
+
+        <p>
+            Lighting.
+        </p>
+
+        <p>
+            More bookshelves.
+        </p>
+
+        <p>
+            Even more bookshelves.
+        </p>
+
+        <p>
+            But eventually, it became
+            the Forgotten Library.
+        </p>
+
+        <p>
+            And of course, I couldn't just
+            leave it as a normal library.
+        </p>
+
+        <p>
+            Where's the fun in that?
+        </p>
+
+        <p>
+            So I filled it with hidden messages,
+            mysterious books and secrets
+            for you to discover.
+        </p>
+
+        <p>
+            If you haven't explored it yet,
+            you definitely should.
+        </p>
+
+    </div>
+
+    <div class="credit-block">
+
+        <p class="credit-heading">
+            THE LAST TRANSMISSION
+        </p>
+
+        <p>
+            Not everyone has Minecraft.
+        </p>
+
+        <p>
+            So I decided to create
+            another path.
+        </p>
+
+        <p>
+            Something completely different.
+        </p>
+
+        <p>
+            A mysterious signal.
+        </p>
+
+        <p>
+            A flashing light.
+        </p>
+
+        <p>
+            And a message waiting
+            to be understood.
+        </p>
+
+        <p>
+            Getting the light to synchronize
+            with the audio was an adventure
+            of its own.
+        </p>
+
+        <p>But hey, it works now.</p>
+
+        <p class="credit-caption">
+            Finally.
+        </p>
+
+    </div>
+
+    <div class="credit-block">
+
+        <p class="credit-heading">
+            THE DEVELOPMENT EXPERIENCE
+        </p>
+
+        <p>Write code.</p>
+
+        <p>Test code.</p>
+
+        <p>Code doesn't work.</p>
+
+        <p>Fix code.</p>
+
+        <p>Something else stops working.</p>
+
+        <h1 class="credit-title">REPEAT.</h1>
+
+        <p>
+            Just when I thought the website
+            was finished...
+        </p>
+
+        <p>
+            I decided it needed background music.
+        </p>
+
+        <p>
+            Then animations.
+        </p>
+
+        <p>
+            Then cinematic transitions.
+        </p>
+
+        <p>
+            Then an entire ending sequence.
+        </p>
+
+        <p>
+            And now you're watching credits
+            on a decoding website.
+        </p>
+
+        <p>
+            Totally necessary, obviously.
+        </p>
+
+        <h1 class="credit-title">
+            WORTH IT.
+        </h1>
+
+    </div>
+
+    <div class="credit-block">
+
+        <p class="credit-heading">
+            THE PEOPLE BEHIND THE ARCHIVE
+        </p>
+
+        <p class="credit-role">
+            ORIGINAL CONCEPT
+        </p>
+
+        <p class="credit-name">LiEn</p>
+
+        <p class="credit-role">
+            PUZZLE DESIGN
+        </p>
+
+        <p class="credit-name">LiEn</p>
+
+        <p class="credit-role">
+            MINECRAFT WORLD DESIGN
+        </p>
+
+        <p class="credit-name">LiEn</p>
+
+        <p class="credit-role">
+            THE PERSON WHO KEPT ADDING FEATURES
+        </p>
+
+        <p class="credit-name">Also LiEn</p>
+
+        <p class="credit-role">
+            STORYTELLING INSPIRATION
+        </p>
+
+        <p class="credit-name">Wifies</p>
+
+        <p class="credit-role">
+            LIBRARY VISUAL REFERENCE
+        </p>
+
+        <p class="credit-name">Rana Rosso</p>
+
+        <p class="credit-role">
+            CODING ASSISTANCE
+        </p>
+
+        <p class="credit-name">ChatGPT — OpenAI</p>
+
+        <p class="credit-caption">
+            Thanks for helping me fix
+            all those errors.
+        </p>
+
+        <p class="credit-role">
+            THE GAME THAT MADE THIS POSSIBLE
+        </p>
+
+        <p class="credit-name">Minecraft</p>
+
+        <p>Mojang Studios</p>
+
+    </div>
+
+    <div class="credit-block">
+
+        <p class="credit-heading">
+            THE SOUNDTRACK
+        </p>
+
+        <p>
+            Because solving mysteries
+            in complete silence
+            just doesn't feel the same.
+        </p>
+
+        <p class="credit-role">
+            MAIN SOUNDTRACK
+        </p>
+
+        <p>
+            30 Minute Deep Work Focus Music
+            | Steady Groovy Productivity
+        </p>
+
+        <p class="credit-name">Focus Waves</p>
+
+        <p class="credit-role">
+            THE FORGOTTEN LIBRARY
+            & THE FINAL KEY
+        </p>
+
+        <p>Minecraft Soundtrack</p>
+
+        <p class="credit-name">C418</p>
+
+        <p class="credit-role">
+            ENDING & CREDITS
+        </p>
+
+        <p class="credit-name">Alpha</p>
+
+        <p>C418</p>
+
+        <p>
+            Some music doesn't just
+            accompany an experience.
+        </p>
+
+        <p>
+            It becomes part of the memory.
+        </p>
+
+    </div>
+
+    <div class="credit-block">
+
+        <p class="credit-heading">
+            WAIT... BEFORE YOU LEAVE
+        </p>
+
+        <p>
+            Remember Level 5?
+        </p>
+
+        <p>
+            You were given two choices.
+        </p>
+
+        <p class="credit-name">
+            The Forgotten Library
+        </p>
+
+        <p>and</p>
+
+        <p class="credit-name">
+            The Last Transmission
+        </p>
+
+        <p>
+            If you've only completed one path,
+            you've only experienced part
+            of the Archive.
+        </p>
+
+        <p>
+            The other path has its own puzzles,
+            atmosphere and secrets.
+        </p>
+
+        <p>
+            So if you're still curious,
+            give the other path a try.
+        </p>
+
+        <p>
+            You won't need to solve
+            the first four levels again.
+        </p>
+
+        <p class="credit-caption">
+            You're welcome.
+        </p>
+
+    </div>
+
+    <div class="credit-block">
+
+        <p class="credit-heading">
+            ONE LAST THING
+        </p>
+
+        <p>
+            Out of everything you could
+            have been doing today...
+        </p>
+
+        <p>
+            You chose to spend some of your time
+            exploring something I created.
+        </p>
+
+        <p>
+            And I really appreciate that.
+        </p>
+
+        <p>
+            I hope at least one puzzle
+            made you think.
+        </p>
+
+        <p>
+            At least one secret
+            made you curious.
+        </p>
+
+        <p>
+            And at least one moment
+            made you smile.
+        </p>
+
+        <p>
+            Because that was the point
+            of making all of this.
+        </p>
+
+        <p>
+            Thank you for playing.
+        </p>
+
+        <p>
+            Seriously.
+        </p>
+
+        <p class="credit-name">— LiEn</p>
+
+    </div>
+
+    <div class="credit-block">
+
+        <p class="credit-heading">
+            FINAL RECORD
+        </p>
+
+        <h1 class="credit-title">
+            THE ARCHIVE
+        </h1>
+
+        <p>
+            Every message has a meaning.
+        </p>
+
+        <p>
+            Every answer opens another door.
+        </p>
+
+        <p>
+            And every ending...
+        </p>
+
+        <p>
+            Could be the beginning
+            of something else.
+        </p>
+
+        <h1 class="credit-title">
+            THE END?
+        </h1>
+
+        <p class="credit-caption">
+            © 2026 LiEn
+        </p>
+
+    </div>
+
+</div>
+
+</div>
+
+
+
+    <div id="credits-controls" class="hidden">
+
+        <button id="pause-credits" type="button">
+            PAUSE
+        </button>
+
+        <button id="skip-credits" type="button">
+            SKIP CREDITS →
+        </button>
+
+    </div>
+
+    <!-- FINAL COMPLETION PAGE -->
+
+    <div id="completion" class="hidden">
+
+        <p class="label">
+            ARCHIVE / RECORD COMPLETE
+        </p>
+
+        <h1>THANK YOU FOR PLAYING.</h1>
+
+        <p id="completion-message">
+            Every journey has an ending.
+            But there is always more to discover.
+        </p>
+
+        <button
+            id="other-path"
+            class="archive-button"
+            type="button"
+        >
+            EXPLORE THE OTHER PATH →
+        </button>
+
+        <button
+            id="replay-credits"
+            class="archive-button"
+            type="button"
+        >
+            REPLAY CREDITS
+        </button>
+
+        <p class="completion-small">
+            THE ARCHIVE — CREATED BY LiEn
+        </p>
+
+    </div>
+
+</section>
+
+<footer>
+    © 2026 LIEN. ALL RIGHTS RESERVED.
+</footer>
+
+<script>
+
+/* ========================================
+   GLOBAL SETTINGS
+======================================== */
+
+const OPERATOR_CODE = "0210OP";
+
+const MUSIC_VOLUME = 0.35;
+
+const FADE_DURATION = 1800;
+
+const CREDIT_SPEED = 55;
+
+const $ = id => document.getElementById(id);
+
+const reducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+).matches;
+
+let currentScreen = "welcome";
+
+let transitioning = false;
+
+let completedPaths = new Set();
+
+let endingRun = 0;
+
+function isOperatorCode(answer) {
+    return answer.trim().toUpperCase() === OPERATOR_CODE;
+}
+
+function normalize(answer) {
+    return answer.toUpperCase().replace(/\s+/g, "");
+}
+
+function wait(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+/* ========================================
+   FLOATING BACKGROUND PARTICLES
+======================================== */
+
+if (!reducedMotion) {
+
+    for (let i = 0; i < 28; i++) {
+
+        const particle = document.createElement("span");
+
+        particle.className = "particle";
+
+        particle.style.left =
+            Math.random() * 100 + "%";
+
+        particle.style.animationDuration =
+            15 + Math.random() * 25 + "s";
+
+        particle.style.animationDelay =
+            -Math.random() * 30 + "s";
+
+        $("particles").appendChild(particle);
+
+    }
+
+}
+
+/* ========================================
+   BACKGROUND MUSIC SYSTEM
+======================================== */
+
+const musicTracks = {
+    mystery: $("mystery-music"),
+    library: $("library-music"),
+    ending: $("ending-music")
+};
+
+let musicEnabled = true;
+
+let musicStarted = false;
+
+let desiredMusic = "mystery";
+
+let morsePlaying = false;
+
+const fadeFrames = new Map();
+
+Object.values(musicTracks).forEach(track => {
+    track.volume = 0;
+});
+
+function fadeMusic(track, target, duration = FADE_DURATION) {
+
+    cancelAnimationFrame(fadeFrames.get(track));
+
+    const initialVolume = track.volume;
+
+    const startTime = performance.now();
+
+    function animate(now) {
+
+        const progress = Math.min(
+            (now - startTime) / duration,
+            1
+        );
+
+        track.volume = Math.max(
+            0,
+            Math.min(
+                1,
+                initialVolume +
+                (target - initialVolume) * progress
+            )
+        );
+
+        if (progress < 1) {
+
+            fadeFrames.set(
+                track,
+                requestAnimationFrame(animate)
+            );
+
+        } else {
+
+            fadeFrames.delete(track);
+
+            if (target === 0) {
+                track.pause();
+            }
+
+        }
+
+    }
+
+    fadeFrames.set(
+        track,
+        requestAnimationFrame(animate)
+    );
+
+}
+
+function syncMusic() {
+
+    const activeName =
+        musicEnabled &&
+        musicStarted &&
+        !morsePlaying
+            ? desiredMusic
+            : null;
+
+    Object.entries(musicTracks).forEach(([name, track]) => {
+
+        if (name === activeName) {
+
+            if (track.paused) {
+
+                track.play().catch(error => {
+                    console.warn(
+                        "Background music could not play:",
+                        name,
+                        error
+                    );
+                });
+
+            }
+
+            fadeMusic(track, MUSIC_VOLUME);
+
+        } else {
+
+            fadeMusic(track, 0);
+
+        }
+
+    });
+
+}
+
+function selectMusic(name) {
+
+    desiredMusic = name;
+
+    syncMusic();
+
+}
+
+function updateMusicForScreen(screen) {
+
+    if (screen === "level5a" || screen === "level6") {
+
+        selectMusic("library");
+
+    } else if (screen === "ending") {
+
+        selectMusic("ending");
+
+    } else {
+
+        selectMusic("mystery");
+
+    }
+
+}
+
+$("music-toggle").addEventListener("click", () => {
+
+    musicStarted = true;
+
+    musicEnabled = !musicEnabled;
+
+    $("music-toggle").textContent =
+        musicEnabled ? "MUSIC: ON" : "MUSIC: OFF";
+
+    $("music-toggle").classList.toggle(
+        "muted",
+        !musicEnabled
+    );
+
+    $("music-toggle").setAttribute(
+        "aria-pressed",
+        String(!musicEnabled)
+    );
+
+    syncMusic();
+
+});
+
+/* ========================================
+   CINEMATIC SCREEN TRANSITIONS
+======================================== */
+
+async function showScreen(nextScreen) {
+
+    if (transitioning) return;
+
+    transitioning = true;
+
+    const overlay = $("transition-overlay");
+
+    overlay.classList.add("active");
+
+    if (currentScreen === "level5b") {
+        stopMorseSignal();
+    }
+
+    if (nextScreen === "ending") {
+        selectMusic(null);
+    }
+
+    await wait(reducedMotion ? 30 : 800);
+
+    document.querySelectorAll(".screen").forEach(screen => {
+        screen.classList.add("hidden");
+    });
+
+    $("ending").classList.add("hidden");
+
+    const isEnding = nextScreen === "ending";
+
+    document.querySelector("main").classList.toggle(
+        "hidden",
+        isEnding
+    );
+
+    document.querySelector("footer").classList.toggle(
+        "hidden",
+        isEnding
+    );
+
+    document.body.style.overflow =
+        isEnding ? "hidden" : "";
+
+    $(nextScreen).classList.remove("hidden");
+
+    currentScreen = nextScreen;
+
+    window.scrollTo(0, 0);
+
+    updateMusicForScreen(nextScreen);
+
+    if (isEnding) {
+        startEnding();
+    }
+
+    overlay.classList.remove("active");
+
+    await wait(reducedMotion ? 30 : 800);
+
+    transitioning = false;
+
+    const input = $(nextScreen).querySelector("input");
+
+    if (input) {
+        input.focus({ preventScroll: true });
+    }
+
+}
+
+/* ========================================
+   WELCOME
+======================================== */
+
+$("begin").addEventListener("click", () => {
+
+    musicStarted = true;
+
+    selectMusic("mystery");
+
+    showScreen("level-one");
+
+});
+
+/* ========================================
+   REUSABLE ANSWER CHECKER
+======================================== */
+
+function registerPuzzle(
+    formId,
+    inputId,
+    feedbackId,
+    validator,
+    nextScreen,
+    onSuccess
+) {
+
+    const form = $(formId);
+
+    const input = $(inputId);
+
+    const feedback = $(feedbackId);
+
+    form.addEventListener("submit", async event => {
+
+        event.preventDefault();
+
+        if (
+            transitioning ||
+            form.dataset.solved === "true"
+        ) {
+            return;
+        }
+
+        const answer = input.value;
+
+        form.classList.remove("correct", "incorrect");
+
+        if (
+            validator(answer) ||
+            isOperatorCode(answer)
+        ) {
+
+            form.dataset.solved = "true";
+
+            feedback.textContent = "ACCESS GRANTED.";
+
+            feedback.className = "feedback success";
+
+            form.classList.add("correct");
+
+            input.disabled = true;
+
+            form.querySelector("button").disabled = true;
+
+            if (onSuccess) {
+                onSuccess();
+            }
+
+            await wait(1200);
+
+            showScreen(nextScreen);
+
+        } else {
+
+            feedback.textContent = "ACCESS DENIED.";
+
+            feedback.className = "feedback error";
+
+            void form.offsetWidth;
+
+            form.classList.add("incorrect");
+
+        }
+
+    });
+
+}
+
+function resetPuzzle(formId, feedbackId) {
+
+    const form = $(formId);
+
+    form.reset();
+
+    form.dataset.solved = "false";
+
+    form.classList.remove("correct", "incorrect");
+
+    form.querySelector("input").disabled = false;
+
+    form.querySelector("button").disabled = false;
+
+    $(feedbackId).textContent = "";
+
+    $(feedbackId).className = "feedback";
+
+}
+
+/* ========================================
+   LEVEL 1
+======================================== */
+
+registerPuzzle(
+    "key-form",
+    "key",
+    "feedback",
+    answer =>
+        normalize(answer) ===
+        normalize("I LIKE UNSTABLE SMP"),
+    "level2"
+);
+
+/* ========================================
+   LEVEL 2
+======================================== */
+
+registerPuzzle(
+    "level2-form",
+    "level2-key",
+    "level2-feedback",
+    answer =>
+        answer.replace(/\s+/g, "") ===
+        "21212114922518195",
+    "level3"
+);
+
+/* ========================================
+   LEVEL 3
+======================================== */
+
+registerPuzzle(
+    "level3-form",
+    "level3-key",
+    "level3-feedback",
+    answer =>
+        normalize(answer) ===
+        normalize("UU UNIVERSE"),
+    "level4"
+);
+
+/* ========================================
+   LEVEL 4
+======================================== */
+
+const BINARY_ANSWER =
+    "01110101 01110101 01110101 01101110 01101001 " +
+    "01110110 01100101 01110010 01110011 01100101";
+
+registerPuzzle(
+    "level4-form",
+    "level4-key",
+    "level4-feedback",
+    answer =>
+        normalize(answer) === normalize(BINARY_ANSWER),
+    "level5-choice"
+);
+
+/* ========================================
+   PATH SELECTION
+======================================== */
+
+$("choose-path-a").addEventListener("click", () => {
+
+    resetPuzzle(
+        "level5a-form",
+        "level5a-feedback"
+    );
+
+    showScreen("level5a");
+
+});
+
+$("choose-path-b").addEventListener("click", () => {
+
+    resetPuzzle(
+        "level5b-form",
+        "level5b-feedback"
+    );
+
+    stopMorseSignal();
+
+    showScreen("level5b");
+
+});
+
+document.querySelectorAll(".path-back").forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        if (
+            button.closest("section")
+                .querySelector("form")
+                .dataset.solved === "true"
+        ) {
+            return;
+        }
+
+        showScreen("level5-choice");
+
+    });
+
+});
+
+function markPathCompleted(path) {
+
+    completedPaths.add(path);
+
+    $("path-" + path + "-completed")
+        .classList.remove("hidden");
+
+    resetPuzzle(
+        "level6-form",
+        "level6-feedback"
+    );
+
+}
+
+/* ========================================
+   COPY MINECRAFT SAVES PATH
+======================================== */
+
+$("copy-saves-path").addEventListener("click", async function () {
+
+    try {
+
+        await navigator.clipboard.writeText(
+            "%appdata%\\.minecraft\\saves"
+        );
+
+        this.textContent = "COPIED!";
+
+    } catch (error) {
+
+        this.textContent = "COPY FAILED";
+
+    }
+
+    setTimeout(() => {
+        this.textContent = "COPY";
+    }, 2000);
+
+});
+
+/* ========================================
+   PATH A ANSWER CHECKER
+======================================== */
+
+const CORRECT_VIDEO_ID = "izNezNuv9sU";
+
+function isCorrectVideoLink(answer) {
+
+    try {
+
+        const url = new URL(answer.trim());
+
+        const host = url.hostname.toLowerCase();
+
+        const path = url.pathname.replace(/\/+$/, "");
+
+        if (
+            ["youtube.com", "www.youtube.com", "m.youtube.com"]
+                .includes(host) &&
+            path === "/watch"
+        ) {
+
+            return url.searchParams.get("v") ===
+                CORRECT_VIDEO_ID;
+
+        }
+
+        if (
+            ["youtu.be", "www.youtu.be"].includes(host)
+        ) {
+
+            return path === "/" + CORRECT_VIDEO_ID;
+
+        }
+
+        return false;
+
+    } catch (error) {
+
+        return false;
+
+    }
+
+}
+
+registerPuzzle(
+    "level5a-form",
+    "level5a-key",
+    "level5a-feedback",
+    isCorrectVideoLink,
+    "level6",
+    () => markPathCompleted("a")
+);
+
+/* ========================================
+   MORSE CODE AUDIO AND LIGHT
+======================================== */
+
+const morseAudio = $("morse-audio");
+
+const signalRoom =
+    document.querySelector(".transmission-room");
+
+const signalStatus = $("signal-status");
+
+let morseAudioContext;
+
+let morseAnalyser;
+
+let morseSource;
+
+let morseAudioData;
+
+let lightAnimationFrame;
+
+morseAudio.loop = false;
+morseAudio.volume = 0.15;
+
+function turnOffMorseLight() {
+
+    cancelAnimationFrame(lightAnimationFrame);
+
+    signalRoom.classList.remove("active");
+
+}
+
+function updateMorseLight() {
+
+    if (
+        morseAudio.paused ||
+        morseAudio.ended ||
+        morseAudio.seeking ||
+        !morseAnalyser
+    ) {
+
+        turnOffMorseLight();
+
+        return;
+
+    }
+
+    morseAnalyser.getByteTimeDomainData(
+        morseAudioData
+    );
+
+    let sum = 0;
+
+    for (let i = 0; i < morseAudioData.length; i++) {
+
+        const sample =
+            (morseAudioData[i] - 128) / 128;
+
+        sum += sample * sample;
+
+    }
+
+    const volume = Math.sqrt(
+        sum / morseAudioData.length
+    );
+
+    signalRoom.classList.toggle(
+        "active",
+        volume > 0.005
+    );
+
+    lightAnimationFrame =
+        requestAnimationFrame(updateMorseLight);
+
+}
+
+/* Pause background music immediately
+   when the Morse transmission begins. */
+
+morseAudio.addEventListener("play", () => {
+
+    morsePlaying = true;
+
+    Object.values(musicTracks).forEach(track => {
+
+        cancelAnimationFrame(fadeFrames.get(track));
+
+        track.pause();
+
+        track.volume = 0;
+
+    });
+
+    signalStatus.textContent =
+        "TRANSMISSION ACTIVE";
+
+});
+
+/* Preserve the working audio analyser */
+
+morseAudio.addEventListener("playing", async () => {
+
+    try {
+
+        if (!morseAudioContext) {
+
+            const AudioContextClass =
+                window.AudioContext ||
+                window.webkitAudioContext;
+
+            morseAudioContext =
+                new AudioContextClass();
+
+            morseAnalyser =
+                morseAudioContext.createAnalyser();
+
+            morseAnalyser.fftSize = 256;
+
+            morseSource =
+                morseAudioContext.createMediaElementSource(
+                    morseAudio
+                );
+
+            morseSource.connect(morseAnalyser);
+
+            morseAnalyser.connect(
+                morseAudioContext.destination
+            );
+
+            morseAudioData = new Uint8Array(
+                morseAnalyser.fftSize
+            );
+
+        }
+
+        await morseAudioContext.resume();
+
+        cancelAnimationFrame(lightAnimationFrame);
+
+        updateMorseLight();
+
+    } catch (error) {
+
+        console.error(
+            "Light synchronization failed:",
+            error
+        );
+
+    }
+
+});
+
+morseAudio.addEventListener("pause", () => {
+
+    turnOffMorseLight();
+
+    signalStatus.textContent =
+        morseAudio.ended
+            ? "TRANSMISSION ENDED"
+            : "TRANSMISSION PAUSED";
+
+    morsePlaying = false;
+
+    syncMusic();
+
+});
+
+morseAudio.addEventListener("ended", () => {
+
+    turnOffMorseLight();
+
+    signalStatus.textContent =
+        "TRANSMISSION ENDED";
+
+    morsePlaying = false;
+
+    syncMusic();
+
+});
+
+morseAudio.addEventListener(
+    "seeking",
+    turnOffMorseLight
+);
+
+morseAudio.addEventListener(
+    "waiting",
+    turnOffMorseLight
+);
+
+morseAudio.addEventListener("seeked", () => {
+
+    if (
+        !morseAudio.paused &&
+        !morseAudio.ended &&
+        morseAnalyser
+    ) {
+
+        cancelAnimationFrame(lightAnimationFrame);
+
+        updateMorseLight();
+
+    }
+
+});
+
+function stopMorseSignal() {
+
+    morseAudio.pause();
+
+    if (morseAudio.readyState > 0) {
+        morseAudio.currentTime = 0;
+    }
+
+    turnOffMorseLight();
+
+    morsePlaying = false;
+
+    signalStatus.textContent =
+        "TRANSMISSION STANDBY";
+
+}
+
+/* ========================================
+   PATH B ANSWER CHECKER
+======================================== */
+
+registerPuzzle(
+    "level5b-form",
+    "level5b-key",
+    "level5b-feedback",
+    answer => answer.trim().toUpperCase() === "LEVIATHAN",
+    "level6",
+    () => {
+
+        stopMorseSignal();
+
+        markPathCompleted("b");
+
+    }
+);
+
+/* ========================================
+   LEVEL 6 ANSWER CHECKER
+======================================== */
+
+registerPuzzle(
+    "level6-form",
+    "level6-key",
+    "level6-feedback",
+    answer => answer.trim().toUpperCase() === "THANKS",
+    "ending"
+);
+
+/* ========================================
+   CINEMATIC ENDING SEQUENCE
+======================================== */
+
+let creditsAnimation = null;
+
+let creditsPaused = false;
+
+async function startEnding() {
+
+    const run = ++endingRun;
+
+    if (creditsAnimation) {
+
+        creditsAnimation.cancel();
+
+        creditsAnimation = null;
+
+    }
+
+    $("credits").classList.add("hidden");
+
+    $("credits-controls").classList.add("hidden");
+
+    $("completion").classList.add("hidden");
+
+    const intro = $("ending-intro");
+
+    intro.classList.remove("hidden", "fade-out");
+
+    // Restart the original text animations.
+
+    intro.querySelectorAll(
+        ".ending-line, .ending-title"
+    ).forEach(element => {
+
+        element.style.animation = "none";
+
+        void element.offsetWidth;
+
+        element.style.animation = "";
+
+    });
+
+    musicTracks.ending.currentTime = 0;
+
+    selectMusic("ending");
+
+    // Original text appears at 2, 5, 8 and 12 seconds.
+    // YOUR TURN remains visible before the credits.
+
+    await wait(reducedMotion ? 10000 : 23000);
+
+    if (run !== endingRun) return;
+
+    intro.classList.add("fade-out");
+
+    await wait(reducedMotion ? 30 : 2000);
+
+    if (run !== endingRun) return;
+
+    intro.classList.add("hidden");
+
+    startCredits();
+
+}
+
+/* ========================================
+   SCROLLING CREDITS
+======================================== */
+
+async function startCredits() {
+
+    const run = ++endingRun;
+
+    if (creditsAnimation) {
+        creditsAnimation.cancel();
+    }
+
+    $("ending-intro").classList.add("hidden");
+
+    $("completion").classList.add("hidden");
+
+    $("credits").classList.remove("hidden");
+
+    $("credits-controls").classList.remove("hidden");
+
+    creditsPaused = false;
+
+    $("pause-credits").textContent = "PAUSE";
+
+    $("pause-credits").classList.toggle(
+        "hidden",
+        reducedMotion
+    );
+
+    const track = $("credits-track");
+
+    // Wait for the reference picture before measuring
+    // the height of the scrolling credits.
+
+    const images = Array.from(
+        track.querySelectorAll("img")
+    );
+
+    await Promise.race([
+
+        Promise.all(
+            images.map(img =>
+                img.decode().catch(() => {})
+            )
+        ),
+
+        wait(3000)
+
+    ]);
+
+    if (run !== endingRun) return;
+
+    if (reducedMotion) {
+
+        $("credits").scrollTop = 0;
+
+        return;
+
+    }
+
+    const travelDistance =
+        track.scrollHeight + window.innerHeight;
+
+    const duration =
+        travelDistance / CREDIT_SPEED * 1000;
+
+    creditsAnimation = track.animate(
+
+        [
+            {
+                transform: "translate(-50%, 0px)"
+            },
+
+            {
+                transform:
+                    "translate(-50%, -" +
+                    travelDistance +
+                    "px)"
+            }
+        ],
+
+        {
+            duration: duration,
+            easing: "linear",
+            fill: "forwards"
+        }
+
+    );
+
+    creditsAnimation.onfinish = () => {
+
+        if (run === endingRun) {
+            finishCredits();
+        }
+
+    };
+
+}
+
+/* Pause or resume credits */
+
+$("pause-credits").addEventListener("click", () => {
+
+    if (!creditsAnimation) return;
+
+    creditsPaused = !creditsPaused;
+
+    if (creditsPaused) {
+
+        creditsAnimation.pause();
+
+        $("pause-credits").textContent = "RESUME";
+
+    } else {
+
+        creditsAnimation.play();
+
+        $("pause-credits").textContent = "PAUSE";
+
+    }
+
+});
+
+/* Skip credits */
+
+$("skip-credits").addEventListener(
+    "click",
+    finishCredits
+);
+
+/* ========================================
+   FINAL COMPLETION PAGE
+======================================== */
+
+function finishCredits() {
+
+    endingRun++;
+
+    if (creditsAnimation) {
+
+        creditsAnimation.cancel();
+
+        creditsAnimation = null;
+
+    }
+
+    $("credits").classList.add("hidden");
+
+    $("credits-controls").classList.add("hidden");
+
+    $("completion").classList.remove("hidden");
+
+    const message = $("completion-message");
+
+    const button = $("other-path");
+
+    if (completedPaths.size === 2) {
+
+        message.textContent =
+            "Both paths have been discovered. " +
+            "Every record has been uncovered. " +
+            "The Archive is complete.";
+
+        button.textContent =
+            "RETURN TO THE CROSSROADS →";
+
+    } else if (completedPaths.has("a")) {
+
+        message.textContent =
+            "You have explored the Forgotten Library. " +
+            "But another signal is still waiting " +
+            "to be discovered.";
+
+        button.textContent =
+            "TRY THE LAST TRANSMISSION →";
+
+    } else {
+
+        message.textContent =
+            "You have decoded the Last Transmission. " +
+            "But the Forgotten Library still holds " +
+            "its own secrets.";
+
+        button.textContent =
+            "EXPLORE THE FORGOTTEN LIBRARY →";
+
+    }
+
+}
+
+/* Return to Level 5 without replaying Levels 1–4 */
+
+$("other-path").addEventListener("click", () => {
+
+    endingRun++;
+
+    if (creditsAnimation) {
+
+        creditsAnimation.cancel();
+
+        creditsAnimation = null;
+
+    }
+
+    resetPuzzle(
+        "level6-form",
+        "level6-feedback"
+    );
+
+    showScreen("level5-choice");
+
+});
+
+/* Replay the scrolling credits */
+
+$("replay-credits").addEventListener("click", () => {
+
+    musicTracks.ending.currentTime = 0;
+
+    selectMusic("ending");
+
+    startCredits();
+
+});
+
+</script>
+
+</body>
+</html>
